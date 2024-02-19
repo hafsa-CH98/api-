@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+
+  const [myData, setMyData] = useState();
+
+  useEffect (() => {
+
+    const fetchData = async () => {
+    const response = await fetch("https://rickandmortyapi.com/api/character")
+    const data = await response.json();
+    setMyData(data.results);
+    };
+    fetchData();
+  }, []);
+
+  console.log(myData);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {myData &&
+        myData.map((data) => {
+          return (
+            <div key={data.id}>
+              <img src={data.image} alt={data.name} />
+              <p>{data.name}</p>
+            </div>
+          );
+        })}
     </div>
   );
 }
